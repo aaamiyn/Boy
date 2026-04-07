@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOY - Face ID</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { background: #0e0e0e; color: #00ffcc; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
+        video { width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 20px; box-shadow: 0 0 20px #00ffcc55; }
+        button { background: #00ffcc; color: black; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 20px; width: 100%; max-width: 400px; }
+        #status { margin-top: 15px; color: #888; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h2>BOY SCANNER</h2>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <button id="snap">📷 SHAXSNI TASDIQLASH</button>
+    <p id="status">Kamera yuklanmoqda...</p>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const status = document.getElementById('status');
+
+        tg.expand();
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+            .then(stream => { video.srcObject = stream; status.innerText = "Tayyor. Yuzingizni markazga qarating."; })
+            .catch(err => { status.innerText = "Xato: Kamera ruxsatnomasi yo'q!"; });
+
+        snap.onclick = () => {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+            
+            const imageData = canvas.toDataURL('image/jpeg', 0.7);
+            tg.sendData(JSON.stringify({ image: imageData }));
+            tg.close();
+        };
+    </script>
+</body>
+</html>
