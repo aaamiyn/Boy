@@ -19,12 +19,12 @@ def init_db():
         language TEXT DEFAULT 'qr'
     )''')
     
-    # Davomat jadvali (Selfie va GPS bilan)
+    # Davomat jadvali (AUTOINCREMENT - chiziqchasiz yoziladi)
     cursor.execute('''CREATE TABLE IF NOT EXISTS attendance (
-        id INTEGER PRIMARY KEY AUTO_INCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         timestamp DATETIME,
-        status TEXT, -- 'IN' or 'OUT'
+        status TEXT,
         verification_dist REAL,
         FOREIGN KEY(user_id) REFERENCES staff(user_id)
     )''')
