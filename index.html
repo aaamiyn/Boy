@@ -1,44 +1,48 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOY - Face ID</title>
+    <title>HAQ - Davamat</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #0e0e0e; color: #00ffcc; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
-        video { width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 20px; box-shadow: 0 0 20px #00ffcc55; }
-        button { background: #00ffcc; color: black; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 20px; width: 100%; max-width: 400px; }
-        #status { margin-top: 15px; color: #888; font-size: 14px; }
+        body { text-align: center; background: #121212; color: white; font-family: sans-serif; padding: 20px; }
+        video { width: 100%; max-width: 400px; border-radius: 15px; border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; }
+        button { background: linear-gradient(45deg, #00f2fe, #4facfe); color: white; padding: 15px 30px; border-radius: 10px; font-size: 18px; border: none; width: 100%; max-width: 400px; margin-top: 20px; font-weight: bold; }
+        #status { color: #888; font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h2>BOY SCANNER</h2>
+    <h3>HAQ Skaner</h3>
     <video id="video" autoplay playsinline></video>
     <canvas id="canvas" style="display:none;"></canvas>
-    <button id="snap">📷 SHAXSNI TASDIQLASH</button>
-    <p id="status">Kamera yuklanmoqda...</p>
+    <button id="capture">📷 JÜZDI SKANERLEW</button>
+    <p id="status">Kamera júklenmekte...</p>
 
     <script>
         const tg = window.Telegram.WebApp;
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const snap = document.getElementById('snap');
+        const btn = document.getElementById('capture');
         const status = document.getElementById('status');
 
         tg.expand();
 
+        // Kamerani ochish (facingMode: user)
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-            .then(stream => { video.srcObject = stream; status.innerText = "Tayyor. Yuzingizni markazga qarating."; })
-            .catch(err => { status.innerText = "Xato: Kamera ruxsatnomasi yo'q!"; });
+            .then(stream => { 
+                video.srcObject = stream; 
+                status.innerText = "Kamera tayar. Júzıńizdi orayǵa qaratıń.";
+            })
+            .catch(err => { status.innerText = "Kameraǵa ruxsat berılmedı!"; });
 
-        snap.onclick = () => {
-            const context = canvas.getContext('2d');
+        btn.onclick = () => {
+            const ctx = canvas.getContext('2d');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0);
+            ctx.drawImage(video, 0, 0);
             
-            const imageData = canvas.toDataURL('image/jpeg', 0.7);
+            const imageData = canvas.toDataURL('image/jpeg', 0.8);
             tg.sendData(JSON.stringify({ image: imageData }));
             tg.close();
         };
